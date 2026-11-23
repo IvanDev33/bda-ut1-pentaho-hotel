@@ -513,40 +513,10 @@
     <give_back_row>Y</give_back_row>
     <group>
       <field>
-        <name>id_hotel</name>
-      </field>
-      <field>
         <name>hotel</name>
       </field>
       <field>
-        <name>comarca</name>
-      </field>
-      <field>
-        <name>id_cadena</name>
-      </field>
-      <field>
-        <name>id_reserva</name>
-      </field>
-      <field>
-        <name>id_hotel_1</name>
-      </field>
-      <field>
         <name>canal</name>
-      </field>
-      <field>
-        <name>noches</name>
-      </field>
-      <field>
-        <name>importe</name>
-      </field>
-      <field>
-        <name>id_reserva_1</name>
-      </field>
-      <field>
-        <name>medio</name>
-      </field>
-      <field>
-        <name>cobrado</name>
       </field>
     </group>
     <fields>
@@ -1266,51 +1236,51 @@
     <fields>
       <field>
         <name>hotel</name>
-        <type>None</type>
+        <type>String</type>
         <format/>
         <currency/>
         <decimal/>
         <group/>
         <nullif/>
         <trim_type>none</trim_type>
-        <length>-1</length>
+        <length>9</length>
         <precision>-1</precision>
       </field>
       <field>
         <name>canal</name>
-        <type>None</type>
+        <type>String</type>
         <format/>
         <currency/>
         <decimal/>
         <group/>
         <nullif/>
         <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>n_reservas</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
+        <length>9</length>
         <precision>-1</precision>
       </field>
       <field>
         <name>cobrado_total</name>
         <type>Number</type>
-        <format/>
+        <format>0.00</format>
         <currency/>
-        <decimal/>
-        <group/>
+        <decimal>.</decimal>
+        <group>.</group>
         <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
-        <precision>-1</precision>
+        <precision>2</precision>
+      </field>
+      <field>
+        <name>n_reservas</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency/>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>10</length>
+        <precision>0</precision>
       </field>
     </fields>
     <attributes/>

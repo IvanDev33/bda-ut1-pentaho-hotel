@@ -526,7 +526,7 @@
         <currency/>
         <decimal/>
         <group/>
-        <nullif>Sin cobro asociado en el archivo recibido.</nullif>
+        <nullif>Sin cobro asociado en el archivo recibido</nullif>
         <length>-1</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
@@ -664,7 +664,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <join_type>LEFT OUTER</join_type>
+    <join_type>INNER</join_type>
     <step1>Ordenar hoteles</step1>
     <step2>Ordenar filas 2</step2>
     <keys_1>
@@ -1194,6 +1194,66 @@
       <splitevery/>
     </file>
     <fields>
+      <field>
+        <name>id_reserva</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>€</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>hotel</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>9</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>canal</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>9</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>importe</name>
+        <type>Number</type>
+        <format>0.00</format>
+        <currency>€</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>2</precision>
+      </field>
+      <field>
+        <name>motivo</name>
+        <type>String</type>
+        <format>yyyy/MM/dd HH:mm:ss.SSS</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1223,19 +1283,15 @@
     <fields>
       <field>
         <name>id_reserva</name>
-        <rename/>
       </field>
       <field>
         <name>hotel</name>
-        <rename/>
       </field>
       <field>
         <name>canal</name>
-        <rename/>
       </field>
       <field>
         <name>importe</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
