@@ -522,7 +522,7 @@
       <field>
         <name>motivo</name>
         <type>String</type>
-        <format>yyyy/MM/dd HH:mm:ss.SSS</format>
+        <format/>
         <currency/>
         <decimal/>
         <group/>
@@ -711,7 +711,7 @@
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
     <format>mixed</format>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>id_reserva</name>
@@ -733,7 +733,7 @@
         <group>.</group>
         <length>8</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>cobrado</name>
@@ -785,7 +785,7 @@
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
     <format>mixed</format>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>id_hotel</name>
@@ -807,7 +807,7 @@
         <group>.</group>
         <length>9</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>comarca</name>
@@ -818,7 +818,7 @@
         <group>.</group>
         <length>10</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>id_cadena</name>
@@ -870,7 +870,7 @@
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
     <format>mixed</format>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>id_reserva</name>
@@ -903,7 +903,7 @@
         <group>.</group>
         <length>9</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>noches</name>
@@ -919,12 +919,12 @@
       <field>
         <name>importe</name>
         <type>Number</type>
-        <format>#.#</format>
+        <format>0.00</format>
         <currency>€</currency>
         <decimal>.</decimal>
-        <group>,</group>
+        <group/>
         <length>15</length>
-        <precision>0</precision>
+        <precision>2</precision>
         <trim_type>none</trim_type>
       </field>
     </fields>
@@ -1171,7 +1171,7 @@
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <endedLine/>
     <fileNameInField>N</fileNameInField>
     <fileNameField/>
@@ -1214,8 +1214,8 @@
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
-        <length>9</length>
+        <trim_type>both</trim_type>
+        <length>-1</length>
         <precision>-1</precision>
       </field>
       <field>
@@ -1226,8 +1226,8 @@
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
-        <length>9</length>
+        <trim_type>both</trim_type>
+        <length>-1</length>
         <precision>-1</precision>
       </field>
       <field>
@@ -1236,7 +1236,7 @@
         <format>0.00</format>
         <currency>€</currency>
         <decimal>.</decimal>
-        <group>,</group>
+        <group/>
         <nullif/>
         <trim_type>none</trim_type>
         <length>15</length>
@@ -1245,12 +1245,12 @@
       <field>
         <name>motivo</name>
         <type>String</type>
-        <format>yyyy/MM/dd HH:mm:ss.SSS</format>
+        <format/>
         <currency/>
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>

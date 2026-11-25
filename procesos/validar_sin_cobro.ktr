@@ -2,7 +2,7 @@
 <transformation>
   <info>
     <name>validar_sin_cobro</name>
-    <description/>
+    <description>Valida cinco reservas esperadas, sin identificadores ajenos ni duplicados; tambien rechaza CSV vacio.</description>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
@@ -436,9 +436,397 @@
   <notepads>
   </notepads>
   <order>
+    <hop>
+      <from>Leer reservas sin cobro</from>
+      <to>Comprobar identificadores esperados</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Comprobar identificadores esperados</from>
+      <to>Ordenar identificadores</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Comprobar identificadores esperados</from>
+      <to>Abortar identificador no esperado</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar identificadores</from>
+      <to>Contar filas por reserva</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Contar filas por reserva</from>
+      <to>Rechazar duplicados</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Rechazar duplicados</from>
+      <to>Contar identificadores unicos</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Rechazar duplicados</from>
+      <to>Abortar duplicado</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Contar identificadores unicos</from>
+      <to>Comprobar cinco reservas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Comprobar cinco reservas</from>
+      <to>Registrar validacion correcta</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Comprobar cinco reservas</from>
+      <to>Abortar cantidad incorrecta</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>Obtener informe</name>
+    <name>Abortar cantidad incorrecta</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>VALIDACION FALLIDA: se esperaban cinco identificadores unicos; un CSV vacio tambien debe fallar.</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT</abort_option>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1264</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Abortar duplicado</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>VALIDACION FALLIDA: hay mas de una fila para el mismo id_reserva.</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT</abort_option>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Abortar identificador no esperado</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>VALIDACION FALLIDA: se ha encontrado un id_reserva distinto de 4, 9, 11, 15 o 18.</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT</abort_option>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Comprobar cinco reservas</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Registrar validacion correcta</send_true_to>
+    <send_false_to>Abortar cantidad incorrecta</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>total_identificadores</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>5</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1264</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Comprobar identificadores esperados</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Ordenar identificadores</send_true_to>
+    <send_false_to>Abortar identificador no esperado</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>id_reserva</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>4</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>OR</operator>
+            <leftvalue>id_reserva</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>9</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>OR</operator>
+            <leftvalue>id_reserva</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>11</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>OR</operator>
+            <leftvalue>id_reserva</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>15</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>OR</operator>
+            <leftvalue>id_reserva</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>18</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Contar filas por reserva</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <all_rows>N</all_rows>
+    <ignore_aggregate>N</ignore_aggregate>
+    <field_ignore/>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>grp</prefix>
+    <add_linenr>N</add_linenr>
+    <linenr_fieldname/>
+    <give_back_row>N</give_back_row>
+    <group>
+      <field>
+        <name>id_reserva</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <aggregate>filas_por_id</aggregate>
+        <subject/>
+        <type>COUNT_ANY</type>
+        <valuefield/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Contar identificadores unicos</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <all_rows>N</all_rows>
+    <ignore_aggregate>N</ignore_aggregate>
+    <field_ignore/>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>grp</prefix>
+    <add_linenr>N</add_linenr>
+    <linenr_fieldname/>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>total_identificadores</aggregate>
+        <subject/>
+        <type>COUNT_ANY</type>
+        <valuefield/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1040</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Leer reservas sin cobro</name>
     <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -461,15 +849,15 @@
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
     <format>mixed</format>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>id_reserva</name>
         <type>Integer</type>
         <format>#</format>
-        <currency>€</currency>
-        <decimal>,</decimal>
-        <group>.</group>
+        <currency/>
+        <decimal>.</decimal>
+        <group/>
         <length>15</length>
         <precision>0</precision>
         <trim_type>none</trim_type>
@@ -478,45 +866,45 @@
         <name>hotel</name>
         <type>String</type>
         <format/>
-        <currency>€</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>9</length>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>canal</name>
         <type>String</type>
         <format/>
-        <currency>€</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>9</length>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>importe</name>
         <type>Number</type>
-        <format>#.#</format>
-        <currency>€</currency>
+        <format>0.00</format>
+        <currency/>
         <decimal>.</decimal>
-        <group>,</group>
+        <group/>
         <length>15</length>
-        <precision>0</precision>
+        <precision>2</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>motivo</name>
         <type>String</type>
         <format/>
-        <currency>€</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>41</length>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
     </fields>
     <attributes/>
@@ -528,8 +916,131 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>80</xloc>
-      <yloc>48</yloc>
+      <xloc>100</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar identificadores</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>id_reserva</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rechazar duplicados</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Contar identificadores unicos</send_true_to>
+    <send_false_to>Abortar duplicado</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>filas_por_id</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>1</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Registrar validacion correcta</name>
+    <type>WriteToLog</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>VALIDACION CORRECTA: cinco reservas sin cobro, identificadores 4, 9, 11, 15 y 18, sin duplicados.</logmessage>
+    <fields>
+      </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1440</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

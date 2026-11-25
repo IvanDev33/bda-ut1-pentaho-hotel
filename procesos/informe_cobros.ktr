@@ -2,7 +2,7 @@
 <transformation>
   <info>
     <name>informe_cobros</name>
-    <description/>
+    <description>Cruza reservas y cobros, incorpora hoteles y resume los cobros por hotel y canal.</description>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
@@ -548,76 +548,6 @@
     </GUI>
   </step>
   <step>
-    <name>Filtrar filas</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to/>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue/>
-        <function>=</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>192</xloc>
-      <yloc>528</yloc>
-      <draw>N</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filtrar filas 2</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to/>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue/>
-        <function>=</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>624</yloc>
-      <draw>N</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Merge Join</name>
     <type>MergeJoin</type>
     <description/>
@@ -686,40 +616,6 @@
     </GUI>
   </step>
   <step>
-    <name>Merge Join Para Copiar</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>FULL OUTER</join_type>
-    <step1/>
-    <step2/>
-    <keys_1>
-      <key>pid</key>
-    </keys_1>
-    <keys_2>
-      <key>pid</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>80</xloc>
-      <yloc>400</yloc>
-      <draw>N</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Obtener cobros</name>
     <type>CsvInput</type>
     <description/>
@@ -743,7 +639,7 @@
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
     <format>mixed</format>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>id_reserva</name>
@@ -765,17 +661,17 @@
         <group>.</group>
         <length>8</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>cobrado</name>
         <type>Number</type>
-        <format>#.#</format>
+        <format>0.00</format>
         <currency>€</currency>
         <decimal>.</decimal>
-        <group>,</group>
+        <group/>
         <length>15</length>
-        <precision>0</precision>
+        <precision>2</precision>
         <trim_type>none</trim_type>
       </field>
     </fields>
@@ -817,7 +713,7 @@
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
     <format>mixed</format>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>id_hotel</name>
@@ -839,7 +735,7 @@
         <group>.</group>
         <length>9</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>comarca</name>
@@ -850,7 +746,7 @@
         <group>.</group>
         <length>10</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>id_cadena</name>
@@ -902,7 +798,7 @@
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
     <format>mixed</format>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>id_reserva</name>
@@ -935,7 +831,7 @@
         <group>.</group>
         <length>9</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>noches</name>
@@ -951,12 +847,12 @@
       <field>
         <name>importe</name>
         <type>Number</type>
-        <format>#.#</format>
+        <format>0.00</format>
         <currency>€</currency>
         <decimal>.</decimal>
-        <group>,</group>
+        <group/>
         <length>15</length>
-        <precision>0</precision>
+        <precision>2</precision>
         <trim_type>none</trim_type>
       </field>
     </fields>
@@ -1211,7 +1107,7 @@
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding/>
+    <encoding>UTF-8</encoding>
     <endedLine/>
     <fileNameInField>N</fileNameInField>
     <fileNameField/>
@@ -1242,8 +1138,8 @@
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
-        <length>9</length>
+        <trim_type>both</trim_type>
+        <length>-1</length>
         <precision>-1</precision>
       </field>
       <field>
@@ -1254,21 +1150,9 @@
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
-        <length>9</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>cobrado_total</name>
-        <type>Number</type>
-        <format>0.00</format>
-        <currency/>
-        <decimal>.</decimal>
-        <group>.</group>
-        <nullif/>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
         <length>-1</length>
-        <precision>2</precision>
+        <precision>-1</precision>
       </field>
       <field>
         <name>n_reservas</name>
@@ -1279,8 +1163,20 @@
         <group>.</group>
         <nullif/>
         <trim_type>none</trim_type>
-        <length>10</length>
+        <length>15</length>
         <precision>0</precision>
+      </field>
+      <field>
+        <name>cobrado_total</name>
+        <type>Number</type>
+        <format>0.00</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>2</precision>
       </field>
     </fields>
     <attributes/>
