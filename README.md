@@ -2,16 +2,16 @@
 
 ## 1. Datos generales
 
-- **Autor:** POR RELLENAR: nombre y apellidos del alumno.
+- **Autor:** Iván Burgos Maccolm
 - **Código personal asignado:** `A001`.
 - **Conjunto de referencia:** `cierre_aula_01`.
 - **Versión de asignación:** `1`.
-- **Fecha y hora de generación de los resultados:** POR RELLENAR: anotar la del log de la ejecución final correcta de `cierre_hotel.kjb` (la del 25/11/2026 00:15 corresponde a una ejecución fallida de `validar_sin_cobro`).
-- **Versión de Pentaho Data Integration (PDI):** 9.4.0.0-343 (según el log de Spoon).
-- **Versión de Java utilizada:** POR RELLENAR: versión exacta; se obtiene con `java -version` o en *Ayuda > Acerca de* de Spoon.
-- **Sistema operativo:** POR RELLENAR: nombre y versión de Windows (las rutas del log indican Windows).
-- **Repositorio:** https://github.com/IvanDev33/bda-ut1-pentaho-hotel (POR RELLENAR: confirmar que es la URL que se entregará).
-- **Commit de entrega:** POR RELLENAR: identificador (hash) del último commit tras el `git push`.
+- **Fecha y hora de generación de los resultados:** 01:37:38 | 25/11/2026
+- **Versión de Pentaho Data Integration (PDI):** 9.4.0.0-343.
+- **Versión de Java utilizada:** OpenJDK version 11.0.33
+- **Sistema operativo:** Ubuntu 22.04 y Windows 10. Gran parte del proyecto se realizó en clase con Ubuntu, pero se finalizó con Windows 10 en casa.
+- **Repositorio:** https://github.com/IvanDev33/bda-ut1-pentaho-hotel
+- **Commit de entrega:** 80f3fa4. (Penúltimo, después de este hay uno más en el que se actualiza el README)
 
 Este proyecto prepara un cierre de cobros a partir de tres ficheros CSV. Las transformaciones generan resultados provisionales en `temporal/`; el job los valida y solo entonces los copia a `salida/`.
 
@@ -38,7 +38,7 @@ bda-ut1-pentaho-hotel/
 
 ## 3. Entradas y procedencia
 
-Los tres CSV son los ficheros originales incluidos en el paquete personal asignado. No se deben editar para la entrega básica. Procedencia concreta del paquete (profesor/aula y fecha de distribución): **POR RELLENAR**.
+Los tres CSV son los ficheros originales incluidos en el paquete personal asignado. Se consiguieron a partir del Moodle en la tarea de Pentaho correspondiente.
 
 | Archivo | Separador | Cabecera y tipos principales |
 |---|---:|---|
@@ -66,107 +66,59 @@ Después se incorpora el nombre del hotel, se conservan únicamente `id_reserva`
 
 ### Por qué se entrega CSV
 
-CSV es un formato sencillo e interoperable que permite revisar los resultados con LibreOffice Calc, Excel, un editor de texto o herramientas de análisis. Se especifican separador, codificación y formato decimal para evitar interpretaciones ambiguas.
+CSV es un formato sencillo que permite revisar los resultados con Excel, editor de texto, etc... Se especifican separador, codificación y formato decimal para evitar errores al momento de lectura. También se tendrá que tener en cuenta si se abre con un Excel, cuál es el separador que utilizará, porque podría separar los decimales de un número como una columna aparte.
 
 ## 5. Resumen para gerencia
 
-El cierre `cierre_aula_01` resume la información de las reservas y los cobros presentes en los ficheros recibidos. Según los controles de referencia del encargo, **15 reservas tienen cobro asociado**, que suman **3.965,50 €**, y **5 reservas** (identificadores 4, 9, 11, 15 y 18) no tienen una fila de cobro asociada en el archivo recibido. Estas cinco reservas requieren revisión; su ausencia en el fichero de cobros no demuestra por sí sola que exista un impago. El informe no permite calcular ocupación: faltan datos de habitaciones disponibles y habitaciones ocupadas por periodo. Para responder a esa pregunta habría que solicitar, para cada hotel y periodo, el inventario de habitaciones disponibles y el número de habitaciones ocupadas (con fechas de inicio y fin y reglas para habitaciones fuera de servicio).
+El cierre `cierre_aula_01` es la revisión de cobros de los cinco hoteles a partir de los ficheros recibidos: contrasta cada reserva con los pagos registrados y resume lo cobrado por hotel y canal de venta. Esta versión del informe no analiza la ocupación, ni la evolución en el tiempo, ni los pagos por reserva en detalle.
 
-Los importes y recuentos anteriores son **valores esperados de referencia del enunciado**. El resultado obtenido y la fecha/hora de la ejecución real deben anotarse aquí después de ejecutar y revisar los CSV: **POR RELLENAR** (reservas con cobro, total en € y reservas sin cobro obtenidos, y si coinciden con lo esperado).
+De las 20 reservas registradas, 15 tienen algún cobro y suman **3.965,50 €**. Las 5 restantes (4, 9, 11, 15 y 18) no aparecen en el fichero de cobros. El precio conjunto de esas cinco reservas es de **639,90 €**. Es dinero pendiente de revisar, pero no un impago confirmado: el cobro podría haberse registrado en otro sistema o no haberse enviado en este fichero. Conviene confirmarlo con cada hotel antes de reclamar nada.
 
-## 6. Validaciones automáticas
+Con los CSV que tenemos no nos sirve para calcular la ocupación de los hoteles, deberíamos de tener por ejemplo, un nuevo dato de hoteles que nos diga cuántas habitaciones tienen disponibles, y en las reservas, especificar cuándo comienza y cuando termina. Podríamos realizar un cálculo con una fecha sobre un hotel, contando cuántas reservas se encuentran dentro de esta fecha de inicio y final para comprobar la ocupación del hotel en ese periodo.
 
-- `validar_informe.ktr` lee el CSV provisional, resume el número de grupos, la suma de `n_reservas` y la suma de `cobrado_total`, y exige 13 grupos, 15 reservas y 3.965,50 €. Su `Group by` sin claves tiene activada la devolución de una fila resumen incluso si el CSV solo contiene cabecera; así el caso vacío produce recuentos/sumas que no superan el filtro y llega a `Abort`.
-- `validar_sin_cobro.ktr` exige que los identificadores sean exactamente los esperados (4, 9, 11, 15 y 18), ordena por `id_reserva`, agrupa por identificador y comprueba que cada grupo tenga una sola fila. Finalmente cuenta los identificadores únicos y exige cinco. El resumen final también devuelve una fila cuando la entrada está vacía, por lo que un CSV vacío falla.
+## 6. Validaciones y control de errores
 
-Los controles fijos son específicos del conjunto `cierre_aula_01`; no deben trasladarse sin cambios a cierres reales con otros datos.
+- `validar_informe.ktr`: exige 13 grupos, 15 reservas y 3.965,50 €. Un CSV vacío falla.
+- `validar_sin_cobro.ktr`: exige exactamente los identificadores 4, 9, 11, 15 y 18, sin duplicados. Un CSV vacío falla.
+- `cierre_hotel.kjb`: comprueba los tres CSV de entrada, genera ambos informes, comprueba los provisionales, valida y publica en `salida/`. Si algo falla, aborta antes de publicar y conserva los ficheros ya publicados.
+- La copia de los dos ficheros no es atómica: si falla la segunda, el job avisa de una posible publicación parcial. Repetir el job con las mismas entradas da los mismos resultados, sin acumular filas.
 
-## 7. Ejecución desde una copia recién descargada
+## 7. Cómo ejecutarlo en tu PC
 
-1. Instalar PDI y Java compatibles. Versiones utilizadas en este trabajo: las indicadas en el apartado 1.
-2. Descargar o clonar el repositorio y mantener su estructura de carpetas.
-3. Confirmar que existen los tres CSV en `entrada/` y que `asignacion.json` corresponde al paquete recibido.
-4. Crear las carpetas `temporal/` y `salida/` si no existen. El job no elimina los informes publicados al comenzar.
-5. Desde Linux, ejecutar Kitchen (ajustando la ruta a la instalación de PDI):
+### Requisitos
+
+- **Java 11** (`java -version`). Si Kitchen no lo encuentra, definir `JAVA_HOME`.
+- **Pentaho Data Integration 9.4** (Community), descomprimido en una carpeta, por ejemplo `C:\pdi\data-integration`.
+- **Git**, o descargar el repositorio como ZIP.
+
+### Pasos
+
+1. Descargar el repositorio sin cambiar su estructura de carpetas:
 
    ```bash
-   /ruta/a/data-integration/kitchen.sh \
-     /file="/ruta/al/repositorio/procesos/cierre_hotel.kjb" \
-     /level:Basic
+   git clone https://github.com/IvanDev33/bda-ut1-pentaho-hotel.git
    ```
 
-   En Windows se puede utilizar `kitchen.bat` con la ruta equivalente. El comando ejecuta el job una vez; **no lo programa** para una hora determinada. La ejecución nocturna requeriría configurar el programador de tareas del sistema (por ejemplo, cron en Linux o el Programador de tareas de Windows).
+2. Comprobar que `entrada/` contiene los tres CSV y crear `temporal/` y `salida/` si no existen.
+3. Ejecutar el job con Kitchen, ajustando las rutas a cada equipo.
 
-6. Los resultados provisionales se escriben en `temporal/`. Solo después de superar las dos validaciones, el job copia `informe_hotel_canal.csv` y `reservas_sin_cobro.csv` a `salida/`, sustituyendo los anteriores.
+   **Windows:**
 
-Para probar una transformación individual se puede utilizar Pan:
+   ```bat
+   cd /d C:\pdi\data-integration
+   Kitchen.bat /file:"C:\ruta\bda-ut1-pentaho-hotel\procesos\cierre_hotel.kjb" /level:Basic
+   ```
 
-```bash
-/ruta/a/data-integration/pan.sh \
-  /file="/ruta/al/repositorio/procesos/informe_cobros.ktr" \
-  /level:Basic
-```
+   **Linux:**
 
-Se puede repetir con `reservas_sin_cobro.ktr`, `validar_informe.ktr` y `validar_sin_cobro.ktr`. Ajustar las rutas a cada instalación.
+   ```bash
+   /ruta/data-integration/kitchen.sh /file="/ruta/bda-ut1-pentaho-hotel/procesos/cierre_hotel.kjb" /level:Basic
+   ```
 
-## 8. Publicación y comportamiento ante errores
+   También puede abrirse `cierre_hotel.kjb` en Spoon y pulsarse **Run**.
 
-El job sigue este orden: Start; comprobación de los tres CSV de entrada; generación del informe; generación de reservas sin cobro; comprobación de existencia de ambos provisionales; validación de ambos; copia de los dos ficheros a `salida/`; mensaje final de éxito.
 
-Si falta una entrada, falla una transformación, falta una salida provisional o falla una validación, el job termina con error antes de comenzar la publicación y conserva las versiones ya publicadas. Las copias sustituyen los archivos de `salida/` únicamente después de validar ambos CSV.
+## 8. Fuentes y ayudas
 
-La sustitución de dos archivos no es atómica. Si se copia correctamente el primer CSV y falla la segunda copia, `salida/` puede quedar con un archivo nuevo y otro antiguo o ausente. En ese caso el job termina con error, registra el aviso de posible publicación parcial y no registra éxito. No se intenta deshacer automáticamente la primera copia.
-
-Al repetir el job con las mismas entradas, los resultados deben ser iguales: las salidas provisionales se sobrescriben y las copias a `salida/` también sobrescriben los archivos anteriores, sin acumular filas.
-
-## 9. Comprobaciones manuales y pruebas
-
-Registrar en `evidencias/` una tabla con **esperado, obtenido y conclusión**, y contrastar cada grupo del informe con la tabla de referencia del taller 2. La comprobación final se hace sobre los archivos completos escritos, no solo sobre vistas previas de Spoon.
-
-Valores de referencia:
-
-| Comprobación | Esperado |
-|---|---:|
-| Reservas / cobros / hoteles leídos | 20 / 15 / 5 |
-| Claves duplicadas en cada origen | 0 |
-| Unión reservas-cobros | 15 filas |
-| Unión con hoteles | 15 filas |
-| Grupos del informe | 13 |
-| Suma de `n_reservas` | 15 |
-| Suma de `cobrado_total` | 3.965,50 € |
-| Laredo, canal web | 2 reservas; 496,50 € |
-| Reservas sin cobro | 5: 4, 9, 11, 15 y 18 |
-| Reconciliación | 15 + 5 = 20 |
-
-Documentar estas seis pruebas con capturas o logs comentados:
-
-1. **Primera ejecución:** ejecutar Kitchen sin informes anteriores; deben publicarse los dos CSV y finalizar correctamente.
-2. **Repetición:** ejecutar de nuevo con las mismas entradas; deben mantenerse grupos, filas y totales sin duplicados.
-3. **Falta una entrada:** cambiar temporalmente la ruta de un CSV en una copia de trabajo; el job debe fallar antes de publicar.
-4. **Salida incompleta:** dejar solo la cabecera en una copia del CSV provisional y ejecutar directamente su validador; debe fallar.
-5. **Total incorrecto:** alterar un importe en una copia del informe provisional y ejecutar directamente `validar_informe.ktr`; debe fallar.
-6. **Recuperación:** restaurar los ficheros originales y ejecutar el job completo; debe generar, validar y publicar de nuevo los resultados correctos.
-
-Para las pruebas 4 y 5 se ejecuta directamente el validador sobre el fichero alterado: si se ejecuta antes el job completo, este regeneraría el provisional y eliminaría la alteración. Registrar también el log de los fallos de preparación/validación y, si se prueba, de fallo durante la segunda copia.
-
-**Estado de las evidencias:** POR RELLENAR; la carpeta debe contener los registros reales de ejecución y las seis pruebas. No se deben presentar resultados esperados como si fueran resultados ya ejecutados.
-
-## 10. Fuentes y adaptación
-
-- Enunciado de la práctica de cierre hotelero, apartados 4 a 9.
-- Taller 2 de Pentaho Data Integration: **POR RELLENAR**: título o referencia exacta del material.
-- Documentación de Pentaho Data Integration: [referencia de entradas de job](https://docs.pentaho.com/pdia-data-integration/pdi-job-entries-reference-overview) y [File Exists (Job Entry)](https://docs.pentaho.com/pdia-data-integration/pdi-job-entries-reference-overview/file-exists-job-entry).
-- Asistencia de ChatGPT para revisar XML de transformaciones, validaciones, job y documentación, y de Claude (Anthropic) para corregir un hop desactivado en `validar_sin_cobro.ktr`, generar `cierre_hotel.kjb` y revisar este README; el alumno debe revisar, abrir en Spoon, ejecutar y comprender cada paso antes de entregar.
-- Adaptaciones realizadas por el alumno: **POR RELLENAR**: qué pasos se reutilizaron del taller 2 y qué configuraciones se modificaron.
-
-## 11. Lista final antes de entregar
-
-- [ ] Sustituir todos los **POR RELLENAR** (autor, versión de Java, sistema operativo, fecha/hora de ejecución, resultado obtenido, procedencia, taller 2, adaptaciones y commit).
-- [ ] Abrir en Spoon los cinco procesos (cuatro transformaciones y el job); revisar que no aparezcan pasos desconocidos ni errores de metadatos.
-- [ ] Ejecutar las transformaciones con Pan y el job con Kitchen.
-- [ ] Ejecutar el job para generar los dos CSV provisionales y publicarlos en `salida/` (ahora mismo no se incluyen resultados de una ejecución PDI comprobada).
-- [ ] Revisar los dos CSV publicados fuera de Spoon y contrastar todos los grupos.
-- [ ] Completar `evidencias/` con la tabla esperado/obtenido/conclusión y las seis pruebas.
-- [ ] Añadir una nota en cada lienzo de transformación con el nombre del alumno y la pregunta que resuelve.
-- [ ] Comprobar `git status`, hacer commit, `git push` y anotar el identificador del commit evaluable.
-- [ ] Entregar en Moodle la URL del repositorio y el identificador del commit.
+- Enunciado de la práctica integradora de Pentaho.
+- Asistencia de ChatGPT, Claude para revisar errores en las transformaciones y jobs. Guías para realizar ciertas tareas como ejecución de Kitchen en Windows o ayuda en errores con Pentaho. Ayuda en el Markdown de este README para darle formato, y comprobar que no faltan detalles o hay errores.
